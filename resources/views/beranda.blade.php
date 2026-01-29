@@ -175,7 +175,7 @@ nav a:hover {
   box-shadow: 0 2px 8px rgba(255,59,59,0.4);
 }
 
-/* User Menu */
+/* User web Menu */
 .user-menu {
   display: flex;
   align-items: center;

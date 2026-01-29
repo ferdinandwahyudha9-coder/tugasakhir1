@@ -533,7 +533,7 @@ tbody tr:hover {
     <li class="active" onclick="location.href='{{route('admin.users')}}'" >Users</li>
     <li onclick="location.href='{{route('admin.produk')}}'" >Produk</li>
     <li onclick="location.href='{{route('admin.pesanan')}}'" >Pesanan</li>
-    <li onclick="location.href='{{route('admin.pesanan.detail', 1)}}'" >Detail Pesanan</li>
+    <!-- <li onclick="location.href='{{route('admin.pesanan.detail', 1)}}'" >Detail Pesanan</li> -->
   </ul>
 </div>
 

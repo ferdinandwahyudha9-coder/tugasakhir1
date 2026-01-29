@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
-    public function checkout(){
+    public function checkout()
+    {
         return view('checkout');
     }
 
@@ -18,12 +20,12 @@ class CheckoutController extends Controller
     {
         // Log untuk debugging
         Log::info('=== CHECKOUT PROCESS STARTED ===');
-        Log::info('Request data:', $request->all());
-        Log::info('Request method:', $request->method());
-        Log::info('Content-Type:', $request->header('Content-Type'));
+        Log::info('Request data:', ['data' => $request->all()]);
+        Log::info('Request method:', ['method' => $request->method()]);
+        Log::info('Content-Type:', ['content_type' => $request->header('Content-Type')]);
 
         try {
-            // Validasi - items sekarang string karena pakai FormData
+            // Validasi - items dikirim sebagai array dari form JavaScript
             $validated = $request->validate([
                 'nama' => 'required|string|max:255',
                 'email' => 'required|email',
@@ -31,53 +33,52 @@ class CheckoutController extends Controller
                 'alamat' => 'required|string',
                 'kota' => 'required|string|max:100',
                 'kodepos' => 'required|string|size:5',
-                'items' => 'required|string',  // ← UBAH: sekarang string (JSON encoded)
+                'items' => 'required|array|min:1',  // ← PERBAIKAN: Accept array
+                'items.*.id' => 'required|integer',
+                'items.*.name' => 'required|string',
+                'items.*.price' => 'required|numeric|min:0',
+                'items.*.qty' => 'required|integer|min:1',
                 'total' => 'required|numeric|min:0',
             ]);
 
             Log::info('Validation passed');
 
-            // Decode items dari JSON string
-            $items = json_decode($validated['items'], true);
-            
-            if (!$items || !is_array($items) || count($items) === 0) {
-                Log::error('Items decode failed or empty');
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Data items tidak valid'
-                ], 422);
-            }
+            // Items sudah array, langsung pakai
+            $items = $validated['items'];
 
-            Log::info('Items decoded successfully:', $items);
+            Log::info('Items validated successfully:', ['items_count' => count($items)]);
 
             // Mulai transaction
             DB::beginTransaction();
 
-            // Insert pesanan - PENTING: id_user bukan user_id
-            $idPesanan = DB::table('pesanan')->insertGetId([
-                'id_user' => Auth::id() ?? null,  // 🔥 FIXED: id_user bukan user_id
-                'tanggal' => now(),
+            // Generate order number
+            $orderNumber = 'ORD-' . date('YmdHis') . '-' . Auth::id();
+
+            // Insert order menggunakan model
+            $order = Order::create([
+                'user_id' => Auth::id() ?? null,
+                'order_number' => $orderNumber,
                 'total_harga' => $validated['total'],
                 'status' => 'pending',
-                'nama_penerima' => $validated['nama'],
-                'email_penerima' => $validated['email'],
-                'telp_penerima' => $validated['telp'],
-                'alamat_pengiriman' => $validated['alamat'],
-                'kota' => $validated['kota'],
-                'kode_pos' => $validated['kodepos'],
-                'created_at' => now(),
-                'updated_at' => now(),
+                'catatan' => 'Pengiriman ke: ' . $validated['alamat'] . ', ' . $validated['kota'],
             ]);
+
+            $idPesanan = $order->id;
 
             Log::info('Order created', ['order_id' => $idPesanan]);
 
-            // Insert detail pesanan dari items
+            // Insert order details dari items
             foreach ($items as $item) {
-                DB::table('detail_pesanan')->insert([
-                    'id_pesanan' => $idPesanan,
-                    'id_produk'  => $item['id'] ?? null,
-                    'jumlah'     => $item['qty'] ?? 1,
-                    'subtotal'   => ($item['price'] ?? 0) * ($item['qty'] ?? 1),
+                $hargaSatuan = $item['price'] ?? 0;
+                $jumlah = $item['qty'] ?? 1;
+                $subtotal = $hargaSatuan * $jumlah;
+
+                DB::table('order_details')->insert([
+                    'order_id' => $idPesanan,
+                    'product_id' => $item['id'] ?? null,
+                    'quantity' => $jumlah,
+                    'harga_satuan' => $hargaSatuan,
+                    'subtotal' => $subtotal,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -99,7 +100,7 @@ class CheckoutController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             Log::error('Validation failed:', $e->errors());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak valid',
@@ -114,7 +115,7 @@ class CheckoutController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage()

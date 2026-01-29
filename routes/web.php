@@ -67,8 +67,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/produk/{id}', [AdminController::class, 'updateProduct'])->name('admin.produk.update');
     Route::delete('/admin/produk/{id}', [AdminController::class, 'deleteProduct'])->name('admin.produk.delete');
     Route::put('/admin/pesanan/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.pesanan.status');
-     Route::get('/admin/users/{id}', [AdminController::class, 'getUser'])->name('admin.users.get');
+    Route::delete('/admin/pesanan/{id}', [AdminController::class, 'deleteOrder'])->name('admin.pesanan.delete');
+    Route::delete('/admin/pesanan/detail/{id}', [AdminController::class, 'deleteOrderDetail'])->name('admin.pesanan.detail.delete');
+    Route::get('/admin/users/{id}', [AdminController::class, 'getUser'])->name('admin.users.get');
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
-    Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.users.store'); 
-    Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete'); 
+    Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
+    Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
 });

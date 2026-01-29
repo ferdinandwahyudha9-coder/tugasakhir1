@@ -375,7 +375,7 @@ td {
     <li onclick="location.href='{{ route('admin.users') }}'">Users</li>
     <li onclick="location.href='{{ route('admin.produk') }}'">Produk</li>
     <li onclick="location.href='{{ route('admin.pesanan') }}'">Pesanan</li>
-    <li onclick="location.href='{{ route('admin.pesanan.detail', $recent_orders->first()->id ?? 1) }}'">Detail Pesanan</li>
+    <!-- <li onclick="location.href='{{ route('admin.pesanan.detail', $recent_orders->first()->id ?? 1) }}'">Detail Pesanan</li> -->
   </ul>
 </div>
 
@@ -507,41 +507,54 @@ td {
   <div class="activity-section">
     <h3>🔔 Aktivitas Terbaru</h3>
 
-    <div class="activity-item">
-      <div class="activity-icon blue">👤</div>
-      <div class="activity-content">
-        <h4>User baru terdaftar</h4>
-        <p>Ahmad Hidayat bergabung sebagai member baru</p>
-      </div>
-      <div class="activity-time">2 jam lalu</div>
-    </div>
+    @php
+      // Merge recent users dan orders dengan timestamp, kemudian sort
+      $activities = collect();
+      
+      foreach($recent_users as $user) {
+        $activities->push([
+          'type' => 'user',
+          'timestamp' => $user->created_at,
+          'data' => $user
+        ]);
+      }
+      
+      foreach($recent_orders as $order) {
+        $activities->push([
+          'type' => 'order',
+          'timestamp' => $order->created_at,
+          'data' => $order
+        ]);
+      }
+      
+      $activities = $activities->sortByDesc('timestamp')->take(5);
+    @endphp
 
-    <div class="activity-item">
-      <div class="activity-icon green">✅</div>
-      <div class="activity-content">
-        <h4>Pesanan berhasil diproses</h4>
-        <p>Pesanan #ORD-001 telah selesai</p>
+    @forelse($activities as $activity)
+      @if($activity['type'] == 'user')
+        <div class="activity-item">
+          <div class="activity-icon blue">👤</div>
+          <div class="activity-content">
+            <h4>Pengguna baru terdaftar</h4>
+            <p>{{ $activity['data']->name }} ({{ $activity['data']->email }}) bergabung</p>
+          </div>
+          <div class="activity-time">{{ $activity['data']->created_at->diffForHumans() }}</div>
+        </div>
+      @elseif($activity['type'] == 'order')
+        <div class="activity-item">
+          <div class="activity-icon green">✅</div>
+          <div class="activity-content">
+            <h4>Pesanan baru - {{ ucfirst($activity['data']->status) }}</h4>
+            <p>{{ $activity['data']->order_number }} dari {{ $activity['data']->user->name ?? 'Guest' }} - Rp {{ number_format($activity['data']->total_harga, 0, ',', '.') }}</p>
+          </div>
+          <div class="activity-time">{{ $activity['data']->created_at->diffForHumans() }}</div>
+        </div>
+      @endif
+    @empty
+      <div class="activity-item">
+        <p style="color: #6b7280;">Belum ada aktivitas</p>
       </div>
-      <div class="activity-time">4 jam lalu</div>
-    </div>
-
-    <div class="activity-item">
-      <div class="activity-icon orange">📦</div>
-      <div class="activity-content">
-        <h4>Produk baru ditambahkan</h4>
-        <p>Jersey Third Kit ditambahkan ke katalog</p>
-      </div>
-      <div class="activity-time">1 hari lalu</div>
-    </div>
-
-    <div class="activity-item">
-      <div class="activity-icon blue">💬</div>
-      <div class="activity-content">
-        <h4>Review baru</h4>
-        <p>Siti Nurhaliza memberikan review 5 bintang</p>
-      </div>
-      <div class="activity-time">2 hari lalu</div>
-    </div>
+    @endforelse
   </div>
 </div>
 

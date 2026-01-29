@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Form Pembayaran - Nand Second</title>
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Checkout - Nand Second</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -56,7 +55,6 @@ header h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: 0.5px;
 }
 
 nav a {
@@ -88,16 +86,13 @@ nav a:hover {
   color: #667eea;
 }
 
-.container {
-  max-width: 1100px;
+.checkout-container {
+  max-width: 950px;
   margin: 50px auto;
-  background: #fff;
   padding: 40px;
+  background: #fff;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 50px;
   animation: fadeInUp 0.6s ease;
 }
 
@@ -112,173 +107,144 @@ nav a:hover {
   }
 }
 
-.form-section,
-.summary-section {
-  flex: 1 1 450px;
-}
-
-.section-title {
-  font-size: 1.8rem;
+.checkout-title {
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   color: #111;
   position: relative;
   padding-bottom: 15px;
 }
 
-.section-title::after {
+.checkout-title::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 70px;
+  width: 80px;
   height: 4px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 2px;
 }
 
-.form-group {
-  margin-bottom: 20px;
-  animation: slideInLeft 0.5s ease forwards;
+.checkout-items-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 30px;
+}
+
+.checkout-items-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.checkout-items-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.checkout-items-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  animation: itemSlideIn 0.5s ease forwards;
   opacity: 0;
 }
 
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.2s; }
-.form-group:nth-child(3) { animation-delay: 0.3s; }
-.form-group:nth-child(4) { animation-delay: 0.4s; }
-.form-group:nth-child(5) { animation-delay: 0.5s; }
-.form-group:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
+@keyframes itemSlideIn {
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #333;
-  font-size: 0.95rem;
+.checkout-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
 }
 
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 10px;
-  border: 2px solid #e0e0e0;
-  font-size: 1rem;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
-  background: #f9f9f9;
+.checkout-item img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-right: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #667eea;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+.checkout-item:hover img {
+  transform: scale(1.05);
 }
 
-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.summary-section {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 30px;
-  border-radius: 15px;
-  height: fit-content;
-  position: sticky;
-  top: 120px;
-}
-
-.items-list {
-  margin-bottom: 25px;
-}
-
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.5s ease forwards;
-  opacity: 0;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-.item:last-child {
-  border-bottom: none;
+.item-info {
+  flex: 1;
 }
 
 .item-name {
-  font-weight: 500;
-  color: #333;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #111;
 }
 
 .item-price {
-  font-weight: 600;
+  font-size: 1.05rem;
   color: #667eea;
+  font-weight: 600;
 }
 
-.summary-divider {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
-  margin: 20px 0;
+.summary-box {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   font-size: 1rem;
-  color: #555;
 }
 
-.total-row {
-  display: flex;
-  justify-content: space-between;
+.summary-row.total {
+  font-size: 1.4rem;
   font-weight: 700;
-  font-size: 1.5rem;
   color: #111;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid rgba(0, 0, 0, 0.15);
+  padding-top: 15px;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
+}
+
+.btn-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
 }
 
 .btn {
-  width: 100%;
+  flex: 1;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   padding: 16px 30px;
   border-radius: 12px;
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  cursor: pointer;
   transition: all 0.3s ease;
+  cursor: pointer;
   border: none;
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-  margin-top: 25px;
-  display: block;
   text-align: center;
 }
 
@@ -291,41 +257,16 @@ textarea {
   transform: translateY(-1px);
 }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.back-link {
-  display: block;
-  margin-top: 20px;
-  text-decoration: none;
+.btn-secondary {
+  background: #fff;
   color: #667eea;
-  font-weight: 500;
-  text-align: center;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
+  border: 2px solid #667eea;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
 }
 
-.back-link:hover {
-  color: #764ba2;
-  transform: translateX(-5px);
-}
-
-.loading {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 0.8s linear infinite;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.btn-secondary:hover {
+  background: #667eea;
+  color: #fff;
 }
 
 .empty-cart {
@@ -335,15 +276,20 @@ textarea {
 }
 
 .empty-cart-icon {
-  font-size: 4rem;
+  font-size: 5rem;
   margin-bottom: 20px;
   opacity: 0.3;
 }
 
 .empty-cart h3 {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   margin-bottom: 10px;
   color: #333;
+}
+
+.empty-cart p {
+  margin-bottom: 25px;
+  font-size: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -357,307 +303,167 @@ textarea {
     font-size: 1.5rem;
   }
 
-  nav {
-    display: flex;
-    gap: 10px;
-  }
-
-  nav a {
-    margin: 0 10px;
-    font-size: 0.9rem;
-  }
-
-  .container {
+  .checkout-container {
     margin: 30px 20px;
     padding: 25px 20px;
-    gap: 30px;
   }
 
-  .section-title {
+  .checkout-title {
     font-size: 1.5rem;
   }
 
-  .summary-section {
-    position: static;
+  .checkout-item {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .total-row {
-    font-size: 1.3rem;
+  .checkout-item img {
+    margin-right: 0;
+    margin-bottom: 15px;
   }
+
+  .btn-container {
+    flex-direction: column;
+  }
+
+  .summary-row.total {
+    font-size: 1.2rem;
+  }
+}
+
+/* Loading animation */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Nand Second</h1>
+  <h1>Nand Market</h1>
   <nav>
-    <a href="{{route('beranda')}}">Beranda</a>
     <a href="{{route('produk')}}">Produk</a>
-    <a href="{{route('keranjang')}}">Keranjang</a>
+    <a href="{{route('beranda')}}">Beranda</a>
   </nav>
 </header>
 
-<div class="container">
-  <div class="form-section">
-    <h2 class="section-title">Alamat Pengiriman</h2>
+<section class="checkout-container">
+  <h2 class="checkout-title">Keranjang Belanja</h2>
 
-    <div class="form-group">
-      <label for="nama">📝 Nama Lengkap</label>
-      <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda" required>
-    </div>
-
-    <div class="form-group">
-      <label for="email">📧 Email</label>
-      <input type="email" id="email" placeholder="contoh@email.com" required>
-    </div>
-
-    <div class="form-group">
-      <label for="telp">📱 Nomor Telepon</label>
-      <input type="tel" id="telp" placeholder="08xxxxxxxxxx" required>
-    </div>
-
-    <div class="form-group">
-      <label for="alamat">📍 Alamat Lengkap</label>
-      <textarea id="alamat" placeholder="Jalan, RT/RW, Kelurahan, Kecamatan" rows="4" required></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="kota">🏙️ Kota / Kabupaten</label>
-      <input type="text" id="kota" placeholder="Nama kota atau kabupaten" required>
-    </div>
-
-    <div class="form-group">
-      <label for="kodepos">📮 Kode Pos</label>
-      <input type="text" id="kodepos" placeholder="12345" maxlength="5" required>
-    </div>
+  <div class="checkout-items-wrapper">
+    <div id="checkout-items"></div>
   </div>
 
-  <div class="summary-section">
-    <h2 class="section-title">Ringkasan Pesanan</h2>
+  <div id="summary-section"></div>
 
-    <div class="items-list" id="itemsContainer"></div>
-
-    <div class="summary-divider"></div>
-
-    <div id="summaryDetails"></div>
-
-    <div class="total-row" id="totalHarga"></div>
-
-    <button class="btn" id="bayarBtn">
-      💳 Bayar Sekarang
+  <div class="btn-container">
+    <button class="btn btn-secondary" onclick="continueShopping()">
+      Lanjut Belanja
     </button>
-
-    <a href="{{route('produk')}}" class="back-link">← Kembali ke Produk</a>
+    <button class="btn" onclick="proceedForm()" id="checkout-btn">
+      Konfirmasi Pembelian
+    </button>
   </div>
-</div>
+</section>
 
 <script>
-console.log('🚀 Checkout page loaded');
-
-// Ambil item checkout dari localStorage
-let checkoutItem = JSON.parse(localStorage.getItem('checkoutItem')) || [];
-if (checkoutItem.length === 0) {
-  checkoutItem = JSON.parse(localStorage.getItem('cart')) || [];
-}
-
-console.log('📦 Checkout items:', checkoutItem);
-
-const itemsContainer = document.getElementById('itemsContainer');
-const summaryDetails = document.getElementById('summaryDetails');
-const totalHarga = document.getElementById('totalHarga');
-let subtotal = 0;
+// Ambil data dari localStorage
+const checkoutData = JSON.parse(localStorage.getItem('checkoutItem')) || JSON.parse(localStorage.getItem('cart')) || [];
+const container = document.getElementById('checkout-items');
+const summarySection = document.getElementById('summary-section');
 let total = 0;
 
-// Jika keranjang kosong
-if (checkoutItem.length === 0) {
-  console.warn('⚠️ Keranjang kosong!');
-  itemsContainer.innerHTML = `
-    <div class="empty-cart">
-      <div class="empty-cart-icon">🛒</div>
-      <h3>Keranjang Kosong</h3>
-      <p>Belum ada produk yang dipilih</p>
-    </div>
-  `;
-  document.getElementById('bayarBtn').disabled = true;
-  document.getElementById('bayarBtn').textContent = 'Keranjang Kosong';
-} else {
-  // Tampilkan items
-  checkoutItem.forEach((item, index) => {
-    const qty = item.qty || 1;
-    const itemTotal = item.price * qty;
-    subtotal += itemTotal;
+// Fungsi untuk menampilkan items
+function displayItems() {
+  if (checkoutData.length === 0) {
+    container.innerHTML = `
+      <div class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <h3>Keranjang Kosong</h3>
+        <p>Belum ada produk yang ditambahkan</p>
+      </div>
+    `;
+    summarySection.style.display = 'none';
+    document.querySelector('.btn-container').style.display = 'none';
+    return;
+  }
 
+  checkoutData.forEach((item, index) => {
     const div = document.createElement('div');
-    div.className = 'item';
+    div.className = 'checkout-item';
     div.style.animationDelay = `${index * 0.1}s`;
     div.innerHTML = `
-      <span class="item-name">${item.name} <small>x${qty}</small></span>
-      <span class="item-price">Rp ${itemTotal.toLocaleString('id-ID')}</span>
+      <img src="${item.image}" alt="${item.name}">
+      <div class="item-info">
+        <p class="item-name">${item.name}</p>
+        <p class="item-price">Rp ${item.price.toLocaleString('id-ID')}</p>
+      </div>
     `;
-    itemsContainer.appendChild(div);
+    container.appendChild(div);
+    total += item.price;
   });
 
-  // Hitung biaya tambahan
-  const tax = subtotal * 0.1; // PPN 10%
-  const shipping = 15000; // Ongkir
-  total = subtotal + tax + shipping;
+  // Tampilkan ringkasan
+  const itemCount = checkoutData.length;
+  const tax = total * 0.1; // PPN 10%
+  const shipping = 15000; // Ongkir tetap
+  const grandTotal = total + tax + shipping;
 
-  console.log('💰 Subtotal:', subtotal);
-  console.log('💰 Tax:', tax);
-  console.log('💰 Shipping:', shipping);
-  console.log('💰 Total:', total);
-
-  // Tampilkan detail biaya
-  summaryDetails.innerHTML = `
-    <div class="summary-row">
-      <span>Subtotal</span>
-      <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
-    </div>
-    <div class="summary-row">
-      <span>PPN (10%)</span>
-      <span>Rp ${tax.toLocaleString('id-ID')}</span>
-    </div>
-    <div class="summary-row">
-      <span>Ongkos Kirim</span>
-      <span>Rp ${shipping.toLocaleString('id-ID')}</span>
+  summarySection.innerHTML = `
+    <div class="summary-box">
+      <div class="summary-row">
+        <span>Subtotal (${itemCount} item)</span>
+        <span>Rp ${total.toLocaleString('id-ID')}</span>
+      </div>
+      <div class="summary-row">
+        <span>PPN (10%)</span>
+        <span>Rp ${tax.toLocaleString('id-ID')}</span>
+      </div>
+      <div class="summary-row">
+        <span>Ongkos Kirim</span>
+        <span>Rp ${shipping.toLocaleString('id-ID')}</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total Pembayaran</span>
+        <span>Rp ${grandTotal.toLocaleString('id-ID')}</span>
+      </div>
     </div>
   `;
-
-  totalHarga.innerHTML = `
-    <span>Total Pembayaran</span>
-    <span>Rp ${total.toLocaleString('id-ID')}</span>
-  `;
-
-  // Tombol bayar - KIRIM KE SERVER PAKAI FORMDATA
-  document.getElementById('bayarBtn').onclick = async (e) => {
-    e.preventDefault();
-    console.log('🔵 Tombol bayar diklik');
-
-    const nama = document.getElementById('nama').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const telp = document.getElementById('telp').value.trim();
-    const alamat = document.getElementById('alamat').value.trim();
-    const kota = document.getElementById('kota').value.trim();
-    const kodepos = document.getElementById('kodepos').value.trim();
-
-    console.log('📝 Data form:', { nama, email, telp, alamat, kota, kodepos });
-
-    // Validasi form
-    if (!nama || !email || !telp || !alamat || !kota || !kodepos) {
-      alert("⚠️ Mohon lengkapi semua data alamat pengiriman!");
-      console.error('❌ Validasi gagal: Ada field yang kosong');
-      return;
-    }
-
-    // Validasi email
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      alert("⚠️ Format email tidak valid!");
-      console.error('❌ Validasi gagal: Email tidak valid');
-      return;
-    }
-
-    // Validasi telepon
-    if (telp.length < 10) {
-      alert("⚠️ Nomor telepon minimal 10 digit!");
-      console.error('❌ Validasi gagal: Telepon terlalu pendek');
-      return;
-    }
-
-    // Validasi kode pos
-    if (kodepos.length !== 5) {
-      alert("⚠️ Kode pos harus 5 digit!");
-      console.error('❌ Validasi gagal: Kode pos tidak 5 digit');
-      return;
-    }
-
-    console.log('✅ Validasi lolos semua!');
-
-    // Loading state
-    const btn = document.getElementById('bayarBtn');
-    btn.innerHTML = '<span class="loading"></span> Memproses Pembayaran...';
-    btn.disabled = true;
-
-    // Siapkan FormData (lebih reliable daripada JSON)
-    const formData = new FormData();
-    formData.append('nama', nama);
-    formData.append('email', email);
-    formData.append('telp', telp);
-    formData.append('alamat', alamat);
-    formData.append('kota', kota);
-    formData.append('kodepos', kodepos);
-    formData.append('items', JSON.stringify(checkoutItem));
-    formData.append('total', total);
-
-    console.log('📤 Data yang akan dikirim (FormData):');
-    for (let pair of formData.entries()) {
-      console.log(`  ${pair[0]}: ${pair[1]}`);
-    }
-
-    // Cek CSRF Token
-    const csrfToken = document.querySelector('meta[name="csrf-token"]');
-    if (!csrfToken) {
-      console.error('❌ CSRF token tidak ditemukan!');
-      alert('❌ Error: CSRF token tidak ditemukan. Silakan refresh halaman.');
-      btn.innerHTML = '💳 Bayar Sekarang';
-      btn.disabled = false;
-      return;
-    }
-    console.log('🔐 CSRF Token:', csrfToken.content);
-
-    // KIRIM DATA KE SERVER PAKAI FORMDATA
-    try {
-      console.log('🌐 Mengirim request ke server...');
-      
-      const response = await fetch('{{ route("checkout.process") }}', {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrfToken.content,
-          'Accept': 'application/json'
-          // JANGAN tambahkan Content-Type, biar browser yang set otomatis untuk FormData
-        },
-        body: formData
-      });
-
-      console.log('📥 Response status:', response.status);
-      console.log('📥 Response ok:', response.ok);
-
-      const result = await response.json();
-      console.log('📥 Response data:', result);
-
-      if (response.ok && result.success) {
-        console.log('✅ Pembayaran berhasil!');
-        alert(`✅ Terima kasih ${nama}!\n\nPesanan Anda sebesar Rp ${total.toLocaleString('id-ID')} berhasil diproses.\n\nDetail pesanan akan dikirim ke ${email}.`);
-
-        // Bersihkan localStorage
-        localStorage.removeItem('checkoutItem');
-        localStorage.removeItem('cart');
-        console.log('🗑️ localStorage dibersihkan');
-
-        // Redirect ke halaman produk
-        console.log('🔄 Redirect ke halaman produk...');
-        window.location.href = '{{route("produk")}}';
-      } else {
-        console.error('❌ Pembayaran gagal:', result);
-        alert('❌ Terjadi kesalahan: ' + (result.message || 'Unknown error'));
-        btn.innerHTML = '💳 Bayar Sekarang';
-        btn.disabled = false;
-      }
-    } catch (error) {
-      console.error('❌ Exception caught:', error);
-      console.error('❌ Error name:', error.name);
-      console.error('❌ Error message:', error.message);
-      console.error('❌ Error stack:', error.stack);
-      
-      alert('❌ Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.\n\nDetail: ' + error.message);
-      btn.innerHTML = '💳 Bayar Sekarang';
-      btn.disabled = false;
-    }
-  };
 }
 
-console.log('✅ Script selesai dijalankan');
+// Fungsi untuk lanjut belanja
+function continueShopping() {
+  window.location.href = '{{route("produk")}}';
+}
+
+// Fungsi untuk proses checkout
+function proceedForm() {
+  if (checkoutData.length === 0) {
+    alert('Keranjang belanja Anda kosong!');
+    return;
+  }
+
+  const btn = document.getElementById('checkout-btn');
+  btn.innerHTML = '<span class="loading"></span> Memproses...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    window.location.href = '{{route("form")}}';
+  }, 800);
+}
+
+// Jalankan fungsi display
+displayItems();
 </script>
 
 </body>

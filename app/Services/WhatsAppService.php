@@ -16,6 +16,13 @@ class WhatsAppService
         $this->token = env('WA_TOKEN', '');
         $this->phoneId = env('WA_PHONE_ID', '');
         $this->apiUrl = rtrim(env('WA_API_URL', 'https://graph.facebook.com'), '/');
+
+        Log::info('=== WhatsApp Service Initialized ===', [
+            'token_exists' => !empty($this->token),
+            'phone_id_exists' => !empty($this->phoneId),
+            'api_url' => $this->apiUrl,
+            'available' => $this->available()
+        ]);
     }
 
     public function available(): bool

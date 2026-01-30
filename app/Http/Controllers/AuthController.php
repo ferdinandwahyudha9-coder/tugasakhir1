@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -19,6 +20,12 @@ class AuthController extends Controller
     // Proses login
     public function loginSubmit(Request $request)
     {
+        Log::info('=== LOGIN ATTEMPT ===', [
+            'email' => $request->email,
+            'ip' => $request->ip(),
+            'timestamp' => now()
+        ]);
+
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -27,11 +34,24 @@ class AuthController extends Controller
         $user = User::where('email', $validated['email'])->first();
 
         if (!$user || !Hash::check($validated['password'], $user->password)) {
+            Log::warning('=== LOGIN FAILED ===', [
+                'email' => $validated['email'],
+                'ip' => $request->ip(),
+                'timestamp' => now()
+            ]);
             return back()->withErrors(['password' => 'Email atau password salah'])->withInput();
         }
 
         Auth::login($user);
         $request->session()->regenerate();
+
+        Log::info('=== LOGIN SUCCESS ===', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'role' => $user->role,
+            'ip' => $request->ip(),
+            'timestamp' => now()
+        ]);
 
         // Redirect sesuai role
         if ($user->role === 'admin') {
@@ -44,7 +64,7 @@ class AuthController extends Controller
     // Proses register
     public function registerSubmit(Request $request)
     {
-           
+
         $validated = $request->validate([
             'name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users',
@@ -54,16 +74,16 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak sesuai!',
         ]);
 
-        
 
-     $user = User::create([
-    'name' => $validated['name'],
-    'email' => $validated['email'],
-    'password' => Hash::make($validated['password']),
-    'role' => 'user',  // ← BENAR
-]);
 
-    
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'user',  // ← BENAR
+        ]);
+
+
 
         Auth::login($user);
         $request->session()->regenerate();
@@ -72,10 +92,10 @@ class AuthController extends Controller
     }
 
     // Profil user
-public function profil()
-{
-    return view('profil', ['user' => Auth::user()]);
-}
+    public function profil()
+    {
+        return view('profil', ['user' => Auth::user()]);
+    }
 
     // Logout
     public function logout(Request $request)

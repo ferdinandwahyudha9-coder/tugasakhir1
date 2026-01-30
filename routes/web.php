@@ -29,11 +29,9 @@ Route::get('/detail_produk', [ProdukController::class, 'detail_produk'])->name('
 //Keranjang
 Route::get('/keranjang', [KeranjangController::class, 'keranjang'])->name('keranjang');
 
-//Checkout - Harus login dulu
-Route::middleware('auth')->group(function () {
-    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])
-        ->name('checkout.process');
-});
+//Checkout - Bisa dilakukan dengan atau tanpa login
+Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])
+    ->name('checkout.process');
 
 
 //Auth (Login, Register, Logout, Profil)

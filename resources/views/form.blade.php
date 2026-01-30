@@ -572,6 +572,14 @@ if (checkoutItem.length === 0) {
       return;
     }
 
+    // Cek CSRF token
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfTokenElement || !csrfTokenElement.content) {
+      alert("⚠️ Session expired. Silakan refresh halaman dan coba lagi.");
+      window.location.reload();
+      return;
+    }
+
     // Loading state
     const btn = document.getElementById('bayarBtn');
     btn.innerHTML = '<span class="loading"></span> Memproses Pembayaran...';
@@ -583,7 +591,7 @@ if (checkoutItem.length === 0) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          'X-CSRF-TOKEN': csrfTokenElement.content,
           'Accept': 'application/json'
         },
         body: JSON.stringify({
@@ -598,6 +606,14 @@ if (checkoutItem.length === 0) {
         })
       });
 
+      // Handle berbagai jenis error
+      if (response.status === 401 || response.status === 419) {
+        // 401 Unauthorized atau 419 CSRF Token Mismatch
+        alert("⚠️ Sesi Anda telah berakhir. Halaman akan dimuat ulang untuk memperbarui sesi.");
+        window.location.reload();
+        return;
+      }
+
       const result = await response.json();
 
       if (response.ok && result.success) {
@@ -610,13 +626,18 @@ if (checkoutItem.length === 0) {
         // Redirect ke halaman produk
         window.location.href = '{{route("produk")}}';
       } else {
-        alert('❌ Terjadi kesalahan: ' + (result.message || 'Unknown error'));
+        // Tampilkan pesan error dengan detail
+        let errorMessage = result.message || 'Unknown error';
+        if (result.errors) {
+          errorMessage += '\n\nDetail:\n' + Object.values(result.errors).flat().join('\n');
+        }
+        alert('❌ Terjadi kesalahan: ' + errorMessage);
         btn.innerHTML = '💳 Bayar Sekarang';
         btn.disabled = false;
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('❌ Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
+      alert('❌ Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.\n\nJika masalah berlanjut, silakan refresh halaman.');
       btn.innerHTML = '💳 Bayar Sekarang';
       btn.disabled = false;
     }

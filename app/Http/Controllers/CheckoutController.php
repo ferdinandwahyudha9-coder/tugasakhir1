@@ -52,7 +52,8 @@ class CheckoutController extends Controller
             DB::beginTransaction();
 
             // Generate order number
-            $orderNumber = 'ORD-' . date('YmdHis') . '-' . Auth::id();
+            $userId = Auth::id() ?? 'GUEST';
+            $orderNumber = 'ORD-' . date('YmdHis') . '-' . $userId;
 
             // Insert order menggunakan model
             $order = Order::create([
@@ -65,7 +66,7 @@ class CheckoutController extends Controller
 
             $idPesanan = $order->id;
 
-            Log::info('Order created', ['order_id' => $idPesanan]);
+            Log::info('Order created', ['order_id' => $idPesanan, 'user_id' => Auth::id(), 'order_number' => $orderNumber]);
 
             // Insert order details dari items
             foreach ($items as $item) {

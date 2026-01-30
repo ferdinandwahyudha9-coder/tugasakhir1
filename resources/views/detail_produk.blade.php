@@ -575,10 +575,10 @@ nav a:hover {
 
 <script>
 const produkList = [
-  {id:1, nama:"MP x LC True Blood", deskripsi:"Used Like New VVGC - Kondisi sangat baik, nyaris seperti baru. Tidak ada cacat atau kerusakan berarti.", harga:180000, hargaStr:"Rp 180.000", images:["images/tb1.jpeg","images/tb2.jpeg","images/tb3.jpeg"]},
-  {id:2, nama:"Lads Club", deskripsi:"Used 1x VVGC - Baru dipakai sekali, kondisi masih sangat prima. Seperti baru dari toko.", harga:260000, hargaStr:"Rp 260.000", images:["images/lc1.jpeg","images/lc2.jpeg","images/lc3.jpeg"]},
-  {id:3, nama:"FNF x PH", deskripsi:"Used Conditions - Kondisi bekas pakai normal, masih layak dan nyaman digunakan.", harga:330000, hargaStr:"Rp 330.000", images:["images/bh1.jpeg","images/bh2.jpeg","images/bh3.jpeg"]},
-  {id:4, nama:"James Boogie", deskripsi:"With Minus Drop Color - Ada sedikit luntur warna, namun tidak mengurangi kualitas dan kenyamanan produk.", harga:450000, hargaStr:"Rp 450.000", images:["images/jb1.jpeg","images/jb3.jpeg"]}
+  {id:1, nama:"MP x LC True Blood", deskripsi:"Used Like New VVGC - Kondisi sangat baik, nyaris seperti baru. Tidak ada cacat atau kerusakan berarti.", harga:180000, hargaStr:"Rp 180.000", images:["/images/tb1.jpeg","/images/tb2.jpeg","/images/tb3.jpeg"]},
+  {id:2, nama:"Lads Club", deskripsi:"Used 1x VVGC - Baru dipakai sekali, kondisi masih sangat prima. Seperti baru dari toko.", harga:260000, hargaStr:"Rp 260.000", images:["/images/lc1.jpeg","/images/lc2.jpeg","/images/lc3.jpeg"]},
+  {id:3, nama:"FNF x PH", deskripsi:"Used Conditions - Kondisi bekas pakai normal, masih layak dan nyaman digunakan.", harga:330000, hargaStr:"Rp 330.000", images:["/images/bh1.jpeg","/images/bh2.jpeg","/images/bh3.jpeg"]},
+  {id:4, nama:"James Boogie", deskripsi:"With Minus Drop Color - Ada sedikit luntur warna, namun tidak mengurangi kualitas dan kenyamanan produk.", harga:450000, hargaStr:"Rp 450.000", images:["/images/jb1.jpeg","/images/jb3.jpeg"]}
 ];
 
 const params = new URLSearchParams(window.location.search);

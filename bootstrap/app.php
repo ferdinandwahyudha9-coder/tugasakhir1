@@ -16,7 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,
         ]);
+
+        // Exclude checkout route dari CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'checkout/process',
+            '/checkout/process',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+

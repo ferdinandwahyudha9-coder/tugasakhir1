@@ -552,11 +552,11 @@ nav a.active::after {
     <div class="nav-right">
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari produk...">
-        <img src="images/download.jpg" alt="Search">
+        <img src="/images/download.jpg" alt="Search">
       </div>
 
       <button class="icon-btn" onclick="window.location.href='{{route('keranjang')}}'" title="Keranjang">
-        <img src="images/keranjang.jpg" alt="Keranjang">
+        <img src="/images/keranjang.jpg" alt="Keranjang">
         <span class="cart-badge" id="cartBadge">0</span>
       </button>
 
@@ -623,7 +623,7 @@ const produkList = [
     nama:"MP x LC TRUE BLOOD",
     harga:180000,
     hargaStr:"Rp 180.000",
-    image:"images/tb1.jpeg",
+    image:"/images/tb1.jpeg",
     category: "new",
     label: "New"
   },
@@ -632,7 +632,7 @@ const produkList = [
     nama:"Lads Club Moscow",
     harga:260000,
     hargaStr:"Rp 260.000",
-    image:"images/lc1.jpeg",
+    image:"/images/lc1.jpeg",
     category: "popular",
     label: "Populer"
   },
@@ -641,7 +641,7 @@ const produkList = [
     nama:"FNF x PH",
     harga:330000,
     hargaStr:"Rp 330.000",
-    image:"images/bh1.jpeg",
+    image:"/images/bh1.jpeg",
     category: "sale",
     label: "Promo"
   },
@@ -650,7 +650,7 @@ const produkList = [
     nama:"James Boogie",
     harga:450000,
     hargaStr:"Rp 450.000",
-    image:"images/jb1.jpeg",
+    image:"/images/jb1.jpeg",
     category: "new",
     label: "New"
   }
